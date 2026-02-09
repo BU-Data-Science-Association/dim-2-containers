@@ -1,11 +1,13 @@
+# TODO: fill in Dockerfile to run message.py script
+
 # Set runtime / base image 
-FROM 
+FROM python:3.9-slim
 
 # Set working directory
-WORKDIR 
+WORKDIR /app
 
 # Copy python script
-COPY 
+COPY message.py .
 
 # Run script
-CMD 
+CMD ["python", "message.py"]
