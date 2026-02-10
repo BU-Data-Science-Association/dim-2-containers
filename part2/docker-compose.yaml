@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_DB: iss_db
+      POSTGRES_USER: iss_user
+      POSTGRES_PASSWORD: iss_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U iss_user -d iss_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ingest:
+    build: ./ingest
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_USER: iss_user
+      DB_PASS: iss_password
+      DB_NAME: iss_db
+    restart: unless-stopped
+
+  transform-worker:
+    build: ./transform-worker
+    depends_on:
+      postgres:
+        condition: service_healthy
+      ingest:
+        condition: service_started
+    environment:
+      DB_HOST: postgres
+      DB_USER: iss_user
+      DB_PASS: iss_password
+      DB_NAME: iss_db
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

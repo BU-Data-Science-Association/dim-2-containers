@@ -30,8 +30,8 @@ while True:
         current_id = row[0]
         current_value = row[1]
         
-        # Find the previous processed row (max id < current_id)
-        cur.execute("SELECT value FROM data WHERE id < %s AND lat_change IS NOT NULL ORDER BY id DESC LIMIT 1", (current_id,))
+        # Find the previous row (any previous row, not just processed ones)
+        cur.execute("SELECT value FROM data WHERE id < %s ORDER BY id DESC LIMIT 1", (current_id,))
         prev_row = cur.fetchone()
         
         if prev_row:
@@ -56,7 +56,14 @@ while True:
             except (ValueError, KeyError, SyntaxError) as e:
                 print(f"Error processing row {current_id}: {e}")
                 continue
+        else:
+            # First row - no previous data to compare, set changes to 0
+            cur.execute("""
+            UPDATE data 
+            SET lat_change = %s, long_change = %s 
+            WHERE id = %s
+            """, (0.0, 0.0, current_id))
     
     conn.commit()
-    print("Transform completed, sleeping for 30 seconds...")
+    print(f"Processed {len(rows)} rows, sleeping for 30 seconds...")
     time.sleep(30)
