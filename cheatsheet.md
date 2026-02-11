@@ -36,15 +36,6 @@ docker rm <container>   # Remove container
 docker container prune  # Remove stopped containers
 ```
 
-### Volumes
-
-```bash
-docker volume ls       # List volumes
-docker volume create <name>  # Create volume
-docker volume rm <name>  # Remove volume
-docker volume prune     # Remove unused volumes
-```
-
 ## Docker Compose Commands
 
 ### Basic Operations
