@@ -29,19 +29,7 @@ services:
       DB_NAME: iss_db
     restart: unless-stopped
 
-  transform-worker:
-    build: ./transform-worker
-    depends_on:
-      postgres:
-        condition: service_healthy
-      ingest:
-        condition: service_started
-    environment:
-      DB_HOST: postgres
-      DB_USER: iss_user
-      DB_PASS: iss_password
-      DB_NAME: iss_db
-    restart: unless-stopped
+# TODO: Write service for transform worker
 
 volumes:
   postgres_data:
