@@ -1,0 +1,1 @@
+docker-compose exec postgres psql -U iss_user -d iss_db -c "SELECT * FROM data LIMIT 10;"
