@@ -31,5 +31,5 @@ while True:
     cur.execute("INSERT INTO data(value) VALUES (%s)", (value,))
     conn.commit()
     
-    # Wait 5 seconds before next poll
-    time.sleep(5)
+    # Wait 10 seconds before next poll
+    time.sleep(10)
